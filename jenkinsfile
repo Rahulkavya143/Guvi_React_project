@@ -1,0 +1,55 @@
+pipeline {
+  agent any
+
+  environment {
+    DEV_IMAGE = 'rahulr143/react-app-dev:latest'
+    PROD_IMAGE = 'rahulr143/react-app-prod:latest'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+        script {
+          env.BRANCH_NAME = env.GIT_BRANCH.replaceAll('origin/', '')
+          echo "Current branch: ${env.BRANCH_NAME}"
+        }
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        script {
+          sh 'chmod +x build.sh'
+          sh "./build.sh ${env.BRANCH_NAME}"
+        }
+      }
+    }
+
+    stage('Push to Docker Hub') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          script {
+            sh """
+              echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+              if [ "${env.BRANCH_NAME}" == "main" ]; then
+                docker push $PROD_IMAGE
+              else
+                docker push $DEV_IMAGE
+              fi
+            """
+          }
+        }
+      }
+    }
+
+    stage('Deploy to EC2') {
+      steps {
+        script {
+          sh 'chmod +x deploy.sh'
+          sh "./deploy.sh ${env.BRANCH_NAME}"
+        }
+      }
+    }
+  }
+}
