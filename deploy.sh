@@ -2,17 +2,10 @@
 
 echo "Deploying the Application..."
 
-BRANCH_NAME="$1"
-
-if [ "$BRANCH_NAME" == "main" ]; then
-  IMAGE="rahulr143/react-app-prod:latest"
-else
-  IMAGE="rahulr143/react-app-dev:latest"
-fi
-
-ssh -o StrictHostKeyChecking=no ubuntu@13.200.124.200 << EOF
-docker pull $IMAGE
-docker stop react-app || true
-docker rm react-app || true
-docker run -d --name react-app -p 80:3000 $IMAGE
+ssh -i /var/lib/jenkins/My_project.pem -o StrictHostKeyChecking=no ubuntu@13.200.124.200 << EOF
+  docker pull rahulr143/react-app-prod:latest
+  docker stop react-container || true
+  docker rm react-container || true
+  docker run -d -p 3000:3000 --name react-container rahulr143/react-app-prod:latest
 EOF
+
