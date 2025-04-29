@@ -10,7 +10,7 @@ else
   IMAGE="rahulr143/react-app-dev:latest"
 fi
 
-ssh -o StrictHostKeyChecking=no ubuntu@<YOUR_EC2_PUBLIC_IP> << EOF
+ssh -o StrictHostKeyChecking=no ubuntu@13.200.124.200 << EOF
 docker pull $IMAGE
 docker stop react-app || true
 docker rm react-app || true
