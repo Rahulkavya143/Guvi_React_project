@@ -1,5 +1,13 @@
+# React Application CI/CD on AWS
 
-# react-app-ci-cd-aws
-=======
-# React Shopping App
->>>>> 555f35d (Moved files from Project to root folder)
+This project demonstrates an end-to-end CI/CD pipeline for deploying
+a React application on AWS.
+
+## Tools & Technologies
+- Jenkins
+- Docker
+- AWS EC2
+- GitHub
+
+## CI/CD Flow
+Code push → Jenkins build → Docker image → EC2 deployment
