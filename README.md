@@ -1,5 +1,5 @@
 
-# Guvi_React_project
+# react-app-ci-cd-aws
 =======
-# Guvi React Shopping App
+# React Shopping App
 >>>>> 555f35d (Moved files from Project to root folder)
